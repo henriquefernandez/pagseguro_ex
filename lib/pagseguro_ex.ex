@@ -1,0 +1,2 @@
+defmodule PagseguroEx do
+end
