@@ -53,4 +53,29 @@ defmodule PagseguroEx.PaymentTest do
     payment = Payment.new |> set_max_age(3600)
     assert payment.max_age == 3600
   end
+
+  test "to_request_map/1" do
+    items = [%Item{id: "prod-1", description: "my prod 1", amount: 40.00, quantity: 2},
+              %Item{id: "prod-2", description: "my prod 2", amount: 4.00, quantity: 3}]
+
+    shipping = %Shipping{type: 3, street: "Boulevard street", city: "Floripa"}
+
+    sender = %Sender{name: "Nando Sousa", email: "email@domain.com"}
+
+    payment = Payment.new |> set_items(items)
+                          |> set_currency("BRL")
+                          |> set_shipping(shipping)
+                          |> set_sender(sender)
+                          |> to_request_map
+
+    assert  %{shippingAddressCity: "Floripa",
+              shippingAddressStreet: "Boulevard street",
+              shippingType: 3, senderName: "Nando Sousa",
+              senderEmail: "email@domain.com",
+              itemId1: "prod-1", itemDescription1: "my prod 1",
+              itemAmount1: 40.00, itemQuantity1: 2,
+              itemId2: "prod-2", itemDescription2: "my prod 2",
+              itemAmount2: 4.00, itemQuantity2: 3
+             } = payment
+  end
 end

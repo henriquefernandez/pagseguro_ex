@@ -4,13 +4,16 @@ defmodule PagseguroEx.Payment do
   See: https://pagseguro.uol.com.br/v2/guia-de-integracao/api-de-pagamentos.html
   """
 
+  alias PagseguroEx.{Sender, Shipping}
+
   defstruct [:currency, :items, :reference, :sender, :shipping, :extra_amount,
              :redirect_url, :notification_url, :max_uses, :max_age]
 
   @type t :: %__MODULE__{currency: binary,
+                         items: any,
                          reference: binary,
-                         sender: PagseguroEx.Sender.t,
-                         shipping: Pagseguro.Shipping.t,
+                         sender: Sender.t,
+                         shipping: Shipping.t,
                          extra_amount: number,
                          redirect_url: binary,
                          notification_url: binary,
@@ -60,5 +63,29 @@ defmodule PagseguroEx.Payment do
 
   def set_max_age(payment, max_age) do
     payment |> Map.put(:max_age, max_age)
+  end
+
+  def to_request_map(payment) do
+    %{
+      currency: payment.currency,
+      reference: payment.reference,
+      extraAmount: payment.extra_amount,
+      redirectURL: payment.redirect_url,
+      notificationURL: payment.notification_url,
+      maxUses: payment.max_uses
+    } |> Map.merge(Sender.to_request_map(payment.sender))
+      |> Map.merge(Shipping.to_request_map(payment.shipping))
+      |> Map.merge(items_to_request_map(payment))
+  end
+
+  def items_to_request_map(payment) do
+    payment.items
+    |> Enum.with_index
+    |> Enum.reduce(%{}, fn({item, index},acc) ->
+      acc |> Map.put(:"itemId#{index + 1}", item.id)
+          |> Map.put(:"itemDescription#{index + 1}", item.description)
+          |> Map.put(:"itemAmount#{index + 1}", item.amount)
+          |> Map.put(:"itemQuantity#{index + 1}", item.quantity)
+    end)
   end
 end
