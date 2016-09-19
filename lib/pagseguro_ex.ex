@@ -17,8 +17,15 @@ defmodule PagseguroEx do
     url = service_url <> "/v2/checkout?" <> request_params
 
     response = HTTPotion.post(url, [headers: headers])
-    [{"code", _, [code]}] = Floki.find(response.body, "code")
-    code
+    case Floki.find(response.body, "code") do
+      [{"code", _, [code]}] ->
+        code
+      body ->
+        raise  """
+          status: #{response.status_code}
+          body: #{body}
+        """
+    end
   end
 
   defp service_url do
