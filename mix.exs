@@ -31,7 +31,7 @@ defmodule PagseguroEx.Mixfile do
       files: ["lib", "mix.exs", "README.md","LICENSE"],
       maintainers: ["Nando Sousa"],
       licenses: ["MIT"],
-      links: %{"Github" => "https://github.com/kuruminapp/pagseguro_ex",
+      links: %{"Github" => "https://github.com/nandosousafr/pagseguro_ex",
                "Docs" => "https://hexdocs.pm/pagseguro_ex/"}
     ]
   end
