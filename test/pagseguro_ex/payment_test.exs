@@ -73,9 +73,9 @@ defmodule PagseguroEx.PaymentTest do
               shippingType: 3, senderName: "Nando Sousa",
               senderEmail: "email@domain.com",
               itemId1: "prod-1", itemDescription1: "my prod 1",
-              itemAmount1: 40.00, itemQuantity1: 2,
+              itemAmount1: "40.00", itemQuantity1: 2,
               itemId2: "prod-2", itemDescription2: "my prod 2",
-              itemAmount2: 4.00, itemQuantity2: 3
+              itemAmount2: "4.00", itemQuantity2: 3
              } = payment
   end
 end

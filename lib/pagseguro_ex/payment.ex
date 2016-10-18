@@ -84,7 +84,7 @@ defmodule PagseguroEx.Payment do
     |> Enum.reduce(%{}, fn({item, index},acc) ->
       acc |> Map.put(:"itemId#{index + 1}", item.id)
           |> Map.put(:"itemDescription#{index + 1}", item.description)
-          |> Map.put(:"itemAmount#{index + 1}", item.amount)
+          |> Map.put(:"itemAmount#{index + 1}", Float.to_string(item.amount, decimals: 2))
           |> Map.put(:"itemQuantity#{index + 1}", item.quantity)
     end)
   end
